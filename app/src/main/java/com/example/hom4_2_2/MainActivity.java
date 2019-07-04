@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ItemsDataAdapter adapter;
     // Список картинок, которые мы будем брать для нашего списка
     private List<Drawable> images = new ArrayList<>();
-    Button button;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         button = findViewById(R.id.btn);
-
         setSupportActionBar(toolbar);
 
         fillImages();
@@ -54,21 +52,11 @@ public class MainActivity extends AppCompatActivity {
         adapter = new ItemsDataAdapter(this, null);
         listView.setAdapter(adapter);
 
-        // При тапе по элементу списка будем показывать его данные
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Тут мы получаем и отображаем данные,
-                // но можно сделать и перейти в новую активити с этими данными
-                showItemData(position);
-            }
-        });
-
         // При долгом тапе по элементу списка будем удалять его
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.removeItem(position);
+                adapter.showItemData(position);
                 return true;
             }
         });
@@ -94,21 +82,12 @@ public class MainActivity extends AppCompatActivity {
     // Для каждого элемента мы возьмем 1 случайную картинку
     // из 5, которые мы сделали вначале.
     private void generateRandomItemData() {
+
         adapter.addItem(new ItemData(
                 images.get(random.nextInt(images.size())),
                 "Hello" + adapter.getCount(),
                 "It\'s me",
                 button));
-    }
-
-    // Покажем сообщение с данными
-    private void showItemData(int position) {
-        ItemData itemData = adapter.getItem(position);
-        Toast.makeText(MainActivity.this,
-                "Title: " + itemData.getTitle() + "\n" +
-                        "Subtitle: " + itemData.getSubtitle() + "\n" +
-                        "Button: " + itemData.getButton(),
-                Toast.LENGTH_SHORT).show();
     }
 }
 

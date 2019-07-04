@@ -8,11 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemsDataAdapter extends BaseAdapter implements View.OnClickListener {
+public class ItemsDataAdapter extends BaseAdapter {
 
     // Хранит список всех элементов списка
     private List<ItemData> items;
@@ -20,7 +21,6 @@ public class ItemsDataAdapter extends BaseAdapter implements View.OnClickListene
     // LayoutInflater – класс, который из
     // layout-файла создает View-элемент.
     private LayoutInflater inflater;
-
 
     // Конструктор, в который передается контекст
     // для создания контролов из XML. И первоначальный список элементов.
@@ -43,7 +43,7 @@ public class ItemsDataAdapter extends BaseAdapter implements View.OnClickListene
     }
 
     // Удаляет элемент списка.
-    void removeItem(int position) {
+    private void removeItem(int position) {
         items.remove(position);
         notifyDataSetChanged();
     }
@@ -82,6 +82,7 @@ public class ItemsDataAdapter extends BaseAdapter implements View.OnClickListene
     // А потом напоняет старую или новую View нужными данными.
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final int finalPusition = position;
         View view = convertView;
         if (view == null) {
             view = inflater.inflate(R.layout.item_list_view, parent, false);
@@ -97,15 +98,22 @@ public class ItemsDataAdapter extends BaseAdapter implements View.OnClickListene
         image.setImageDrawable(itemData.getImage());
         title.setText(itemData.getTitle());
         subtitle.setText(itemData.getSubtitle());
-        button.setOnClickListener(this);
-        button.setTag(position);
-        button.setFocusable(false);
-
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem(finalPusition);
+            }
+        });
         return view;
     }
 
-    @Override
-    public void onClick(View v) {
-        removeItem(0);
+    // Покажем сообщение с данными
+    void showItemData(int position) {
+        ItemData itemData = getItem(position);
+        Toast.makeText(inflater.getContext(),
+                "Title: " + itemData.getTitle() + "\n" +
+                        "Subtitle: " + itemData.getSubtitle() + "\n" +
+                        "Button: " + itemData.getButton(),
+                Toast.LENGTH_SHORT).show();
     }
 }

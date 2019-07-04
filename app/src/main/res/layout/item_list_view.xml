@@ -58,8 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="50dp"
         android:layout_weight="0"
-        android:background="@color/accent"
+        android:background="@android:color/holo_red_dark"
         android:text="@string/delete" />
 
 </LinearLayout>
